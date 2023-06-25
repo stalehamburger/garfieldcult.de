@@ -1,0 +1,146 @@
+<html>
+<head>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+        }
+
+        .shake-image {
+            position: absolute;
+            top: 27%;
+            left:46.5%;
+            transform: translate(-50%, -50%);
+            animation: shake 0.001s infinite linear;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            25% {
+                transform: translate(-50%, -50%) rotate(-5deg);
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            75% {
+                transform: translate(-50%, -50%) rotate(5deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+        }
+
+        .countdown-container {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .result-message {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+
+        .result-message.green {
+            color: green;
+        }
+
+        .result-message.red {
+            color: red;
+        }
+
+        .start-button {
+            position: absolute;
+            top: 90%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        function showResultMessage(isWorthy) {
+            var resultElement = document.getElementById("resultMessage");
+            resultElement.style.display = "block";
+
+            if (isWorthy) {
+                resultElement.innerHTML = "Congratulations! You are worthy of joining the cult.";
+                resultElement.classList.add("green");
+                resultElement.classList.remove("red");
+            } else {
+                resultElement.innerHTML = "Sorry, you are not worthy of joining the cult.";
+                resultElement.classList.add("red");
+                resultElement.classList.remove("green");
+            }
+
+            // Play the sound
+            var audio = new Audio('bell.ogg');
+            audio.play();
+
+            // Hide the button and countdown text
+            var buttonElement = document.getElementById("startButton");
+            buttonElement.style.display = "none";
+
+            var countdownElement = document.getElementById("countdownContainer");
+            countdownElement.style.display = "none";
+        }
+
+        function startCountdown(seconds) {
+            var countdownElement = document.getElementById("countdown");
+            countdownElement.innerHTML = seconds;
+
+            var countdownInterval = setInterval(function() {
+                seconds--;
+                countdownElement.innerHTML = seconds;
+
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    var randomNumber = Math.random();
+                    var isWorthy = randomNumber < 0.5;
+                    showResultMessage(isWorthy);
+                }
+            }, 1000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("startButton").addEventListener("click", function() {
+                startCountdown(5); // Start the countdown with 5 seconds
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="countdownContainer" class="countdown-container">
+        Countdown: <span id="countdown">5</span> seconds
+    </div>
+
+    <div id="resultMessage" class="result-message"></div>
+
+    <button id="startButton" class="start-button">Start Countdown</button>
+
+    <img class="shake-image" src="garf.webp" alt="Shaking Image">
+
+    <audio id="audioElement" src="bell.ogg"></audio>
+</body>
+</html>
